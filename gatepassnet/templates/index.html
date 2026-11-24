@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Register for visitor Wi-Fi &middot; GatepassNet{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Campus Wi-Fi, without handing out the staff password.</h1>
+    <p class="hero-sub">
+      Register below, and reception approves your request in minutes. You'll get a
+      time-limited access code and QR pass &mdash; connectivity ends on its own when your visit does.
+    </p>
+  </div>
+  <ol class="hero-steps">
+    <li><span class="step-index">1</span><div><strong>Register</strong><br>Tell us who you are and why you're here.</div></li>
+    <li><span class="step-index">2</span><div><strong>Get approved</strong><br>Reception reviews and approves your request.</div></li>
+    <li><span class="step-index">3</span><div><strong>Connect</strong><br>Scan your QR code or enter the access code to get online.</div></li>
+  </ol>
+</section>
+
+<section class="form-card">
+  <h2>Visitor registration</h2>
+  <form action="{{ url_for('register') }}" method="POST" novalidate>
+    <div class="field">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" placeholder="e.g. Priya Sharma" required maxlength="100">
+    </div>
+
+    <div class="field">
+      <label for="mobile">Mobile number</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="e.g. 9876543210" pattern="[0-9]{7,15}" required>
+    </div>
+
+    <div class="field">
+      <label for="purpose">Purpose of visit</label>
+      <input type="text" id="purpose" name="purpose" placeholder="e.g. Meeting Prof. Rao, Dept. of CS" required maxlength="255">
+    </div>
+
+    <div class="field">
+      <label for="host_department">Host department <span class="optional">(optional)</span></label>
+      <input type="text" id="host_department" name="host_department" placeholder="e.g. Computer Engineering" maxlength="100">
+    </div>
+
+    <button type="submit" class="btn-primary">Submit request</button>
+  </form>
+</section>
+
+{% endblock %}

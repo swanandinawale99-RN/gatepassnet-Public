@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Activity log &middot; GatepassNet{% endblock %}
+{% block content %}
+
+<section class="table-card">
+  <h1>Activity log</h1>
+  {% if logs %}
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Visitor</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for entry in logs %}
+      <tr>
+        <td>{{ entry.timestamp.strftime('%d %b %Y, %H:%M:%S') }}</td>
+        <td>{{ entry.visitor_name or "-" }}</td>
+        <td>{{ entry.action }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No activity recorded yet.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard &middot; GatepassNet{% endblock %}
+{% block content %}
+
+<section class="dash-head">
+  <h1>Visitor requests</h1>
+  <div class="stat-row">
+    <div class="stat"><span>{{ pending|length }}</span>Pending</div>
+    <div class="stat"><span>{{ approved|length }}</span>Approved</div>
+    <div class="stat"><span>{{ rejected|length }}</span>Rejected</div>
+  </div>
+</section>
+
+<section class="table-card">
+  <h2>Pending approval</h2>
+  {% if pending %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Mobile</th><th>Purpose</th><th>Host dept.</th><th>Submitted</th><th>Grant access for</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for v in pending %}
+      <tr>
+        <td>{{ v.name }}</td>
+        <td>{{ v.mobile }}</td>
+        <td>{{ v.purpose }}</td>
+        <td>{{ v.host_department or "-" }}</td>
+        <td>{{ v.requested_at.strftime('%d %b, %H:%M') }}</td>
+        <td>
+          <form action="{{ url_for('approve', visitor_id=v.id) }}" method="POST" class="inline-form">
+            <select name="hours">
+              <option value="1">1 hour</option>
+              <option value="4" selected>4 hours</option>
+              <option value="8">8 hours</option>
+              <option value="24">24 hours</option>
+            </select>
+        </td>
+        <td class="actions">
+            <button type="submit" class="btn-small btn-approve">Approve</button>
+          </form>
+          <form action="{{ url_for('reject', visitor_id=v.id) }}" method="POST" class="inline-form">
+            <button type="submit" class="btn-small btn-reject">Reject</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No pending requests right now.</p>
+  {% endif %}
+</section>
+
+<section class="table-card">
+  <h2>Approved visitors</h2>
+  {% if approved %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Access code</th><th>Status</th><th>Expires</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for v in approved %}
+      <tr>
+        <td>{{ v.name }}</td>
+        <td><code>{{ v.access_code }}</code></td>
+        <td><span class="status-tag status-{{ v.current_status()|lower }}">{{ v.current_status() }}</span></td>
+        <td>{{ v.expires_at.strftime('%d %b, %H:%M') if v.expires_at else "-" }}</td>
+        <td class="actions">
+          {% if v.current_status() == "Active" %}
+          <form action="{{ url_for('revoke', visitor_id=v.id) }}" method="POST" class="inline-form">
+            <button type="submit" class="btn-small btn-reject">Revoke</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No approved visitors yet.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

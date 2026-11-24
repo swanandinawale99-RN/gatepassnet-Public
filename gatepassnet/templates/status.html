@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Your access status &middot; GatepassNet{% endblock %}
+{% block content %}
+
+{% set current = visitor.current_status() %}
+
+<section class="status-card status-{{ current|lower }}">
+  <p class="status-pill">{{ current }}</p>
+  <h1>{{ visitor.name }}</h1>
+  <p class="muted">Request #{{ visitor.id }} &middot; submitted {{ visitor.requested_at.strftime('%d %b %Y, %H:%M') }}</p>
+
+  {% if current == "Pending" %}
+    <p>Your request is waiting for admin approval. Refresh this page after a few minutes, or check back with reception directly.</p>
+
+  {% elif current == "Active" %}
+    <div class="access-grid">
+      <div>
+        <p class="label">Access code</p>
+        <p class="access-code">{{ visitor.access_code }}</p>
+        <p class="label">Valid until</p>
+        <p>{{ visitor.expires_at.strftime('%d %b %Y, %H:%M') }} &middot; {{ visitor.time_remaining() }} remaining</p>
+        <p>Enter this code on the campus Wi-Fi login page, or show the QR code below at the gate.</p>
+      </div>
+      <div class="qr-box">
+        <img src="{{ url_for('static', filename='qrcodes/' ~ visitor.qr_filename) }}" alt="QR code for access">
+      </div>
+    </div>
+
+  {% elif current == "Expired" %}
+    <p>This access window has ended. If you still need Wi-Fi access, please register again at the front desk.</p>
+
+  {% elif current == "Rejected" %}
+    <p>This request was not approved. Please speak with reception if you believe this is a mistake.</p>
+  {% endif %}
+
+  <a class="link-back" href="{{ url_for('home') }}">Register another visitor</a>
+</section>
+
+{% endblock %}

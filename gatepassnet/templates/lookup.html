@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Check your status &middot; GatepassNet{% endblock %}
+{% block content %}
+
+<section class="form-card">
+  <h2>Check your request</h2>
+  <p class="muted">Enter the mobile number you registered with to find your visit requests.</p>
+  <form action="{{ url_for('lookup') }}" method="POST" novalidate>
+    <div class="field">
+      <label for="mobile">Mobile number</label>
+      <input type="tel" id="mobile" name="mobile" pattern="[0-9]{7,15}" required>
+    </div>
+    <button type="submit" class="btn-primary">Find my requests</button>
+  </form>
+</section>
+
+{% if results %}
+<section class="table-card">
+  <h2>Your requests</h2>
+  <table>
+    <thead>
+      <tr><th>Purpose</th><th>Submitted</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for v in results %}
+      <tr>
+        <td>{{ v.purpose }}</td>
+        <td>{{ v.requested_at.strftime('%d %b, %H:%M') }}</td>
+        <td><span class="status-tag status-{{ v.current_status()|lower }}">{{ v.current_status() }}</span></td>
+        <td><a href="{{ url_for('status', visitor_id=v.id) }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+
+{% endblock %}
