@@ -26,7 +26,6 @@ Open **http://127.0.0.1:5000** in your browser.
 
 - Visitor registration form: `/`
 - Check status by mobile number: `/lookup`
-- Admin login: `/admin/login` — username `admin`, password `admin123`
   (edit `ADMIN_USERNAME` / `ADMIN_PASSWORD` at the top of `app.py`)
 
 The database (`instance/visitors.db`) and QR code images
